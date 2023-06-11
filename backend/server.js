@@ -1,25 +1,30 @@
 const express = require("express");
 const dotenv = require('dotenv');
+const userRoutes = require("./routes/userRoutes");
+const errorHandler = require('./middlewares/errorHandler');
+const cors = require('cors');
+dotenv.config();
 
-const { chats } = require('./Data/data');
+const connectDB = require("./config/dbConnection");
+
+connectDB();
+const { chats } = require('./data/data');
 const app = express();
+app.use(express.json()); // to accept the json data
 
 app.get('/', (req, res) => {
     res.send("API is running");
 });
 
+app.use('/api/user', userRoutes);
+app.use(errorHandler);
+app.use(
+    cors({
+        origin : "http://localhost:3000",
+    })
+)
 
-app.get('/api/chat', (req, res) => {
-    res.send(chats);
-});
 
-
-app.get('/api/chat/:id', (req, res) => {
-    // console.log(req.params.id);
-
-    const singleChat = chats.find(c => c._id === req.params.id);
-    res.send(singleChat);
-});
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, console.log("Server is running on port 5000..."));
+app.listen(PORT, console.log(`Server is running on port 5000...`.green.bold));

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 const Signup = () => {
     const [name, setName] = useState();
-    const [email, setEmail] = useState();
+    const [email, setEmail] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState();
     const [password, setPassword] = useState();
     const [pic, setPic] = useState();
@@ -14,7 +14,21 @@ const Signup = () => {
     const handleClick = () => setShow(!show);
     const toast = useToast();
     const history = useHistory();
-
+    const validateEmail = () => {
+        // console.log("validate email: ", email);
+        if(email === null) return;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          toast({
+            title : "Invalid Email",
+            status: "warning",
+            description: "Please enter a valid email address!",
+            position: "top-right",
+            duration: 3000,
+            isClosable: true
+          });
+        }
+      };
 
     const postDetails = (pics) => {
         setLoading(true);
@@ -147,6 +161,7 @@ const Signup = () => {
             type={"email"}
                 placeholder='Enter Your Email'
                 onChange={(e) => setEmail(e.target.value)}
+                onBlur={validateEmail}
             />
         </FormControl>
         <FormControl id='password' isRequired={true}>

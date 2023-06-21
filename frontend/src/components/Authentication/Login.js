@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/button";
-import { FormControl, FormLabel } from "@chakra-ui/form-control";
+import { FormControl, FormLabel} from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { VStack } from "@chakra-ui/layout";
 import { useState } from "react";
@@ -11,9 +11,25 @@ const Login = () => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const toast = useToast();
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState(null);
   const [password, setPassword] = useState();
   const [loading, setLoading] = useState(false);
+
+  const validateEmail = () => {
+    // console.log("validate email: ", email);
+    if(email === null) return;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title : "Invalid Email",
+        status: "warning",
+        description: "Please enter a valid email address!",
+        position: "top-right",
+        duration: 3000,
+        isClosable: true
+      });
+    }
+  };
 
   const history = useHistory();
 
@@ -83,8 +99,8 @@ const Login = () => {
           value={email}
           type="email"
           placeholder="Enter Your Email Address"
-          onChange={(e) => setEmail(e.target.value)
-          }
+          onChange={(e) => setEmail(e.target.value)}
+          onBlur={validateEmail}
         />
       </FormControl>
       <FormControl id="password" isRequired>

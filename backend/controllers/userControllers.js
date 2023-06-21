@@ -53,11 +53,41 @@ const authUser = asyncHandler( async (req, res) => {
     const user = await User.findOne({email});
 
     if(user && (await bcrypt.compare(password, user.password))){
-        res.status(200).json([{message: "Login successfull!"},{_id: user._id, name : user.name, email: user.email, pic: user.pic}]);
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            pic: user.pic,
+            token: generateToken(user._id),
+          });
     }
     else{
         res.status(401).json({message : "Invalid Email or Password"});
         return;
     }
+});
+
+//@desc getting all users from db
+//@route /api/user?search=search_value
+//@access  protected
+
+const allUsers = asyncHandler (async (req, res) => {
+    // just like req.params
+    console.log("all users");
+    const keyword = req.query.search
+    ? {
+        $or: [
+            {name: {$regex: req.query.search, $options: "i"} },
+            {email: {$regex: req.query.search, $options: "i"} },
+        ],
+        }
+    : {}; // ternary operator
+    
+    // find all the users exxcept logged in user
+    console.log("getting all users");
+    const users = await User.find(keyword).find({ _id: { $ne: req.user._id} });
+    res.send(users);
+    console.log(keyword);
 })
-module.exports = {registerUser, authUser};
+module.exports = {registerUser, authUser, allUsers};

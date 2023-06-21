@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require('dotenv');
 const userRoutes = require("./routes/userRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
 dotenv.config();
@@ -17,7 +18,11 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/user', userRoutes);
+app.use("/api/chats", chatRoutes);
+
+
 app.use(errorHandler);
+// handling cors errors when calling backend api endpoints from frontend
 app.use(
     cors({
         origin : "http://localhost:3000",

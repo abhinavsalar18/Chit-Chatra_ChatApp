@@ -27,7 +27,7 @@ const accessChats = asyncHandler (async (req, res) => {
       path: "latestMessage.sender",
       select: "name pic email",
     });
-    console.log(isChat);
+    console.log("accessChats: ", isChat);
     if (isChat.length > 0) {
         console.log("Older chats", isChat);
       res.send(isChat[0]);

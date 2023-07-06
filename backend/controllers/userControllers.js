@@ -74,7 +74,7 @@ const authUser = asyncHandler( async (req, res) => {
 
 const allUsers = asyncHandler (async (req, res) => {
     // just like req.params
-    console.log("all users");
+    // console.log("all users");
     const keyword = req.query.search
     ? {
         $or: [
@@ -85,9 +85,9 @@ const allUsers = asyncHandler (async (req, res) => {
     : {}; // ternary operator
     
     // find all the users exxcept logged in user
-    console.log("getting all users");
+    // console.log("getting all users");
     const users = await User.find(keyword).find({ _id: { $ne: req.user._id} });
     res.send(users);
-    console.log(keyword);
+    // console.log(keyword);
 })
 module.exports = {registerUser, authUser, allUsers};

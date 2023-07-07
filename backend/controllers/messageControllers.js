@@ -53,7 +53,7 @@ const allMessages = asyncHandler(async (req, res) => {
         .populate("sender", "name pic email")
         .populate("chat");
 
-        console.log("message", messages);
+        // console.log("message", messages);
       res.json(messages);
     } catch (error) {
       res.status(400);

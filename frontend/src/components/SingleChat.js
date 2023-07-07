@@ -70,6 +70,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
     useEffect(() => {
         fetchMessages();
+        //
 
         selectedChatCompare = selectedChat;
     }, [selectedChat]);

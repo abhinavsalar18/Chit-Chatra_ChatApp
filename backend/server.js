@@ -48,7 +48,7 @@ const io = require('socket.io')(server, {
 
 // for setup
 io.on("connection", (socket) => {
-    // console.log("connected to socket.io");
+    console.log("connected to socket.io"); ty
 
     socket.on('setup', (userData) => {
         socket.join(userData._id);
@@ -81,4 +81,8 @@ io.on("connection", (socket) => {
     socket.on("typing", (room) => socket.in(room).emit("typing"));
     socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
+    socket.off("setup", () => {
+        console.log("User disconnected!");
+        socket.leave(userData._id);
+    });
 });

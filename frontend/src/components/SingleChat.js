@@ -11,6 +11,8 @@ import { useEffect } from "react";
 import './style.css';
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
+import Lottie from "react-lottie";
+import animationData from "../animations/12966-typing-indicator.json"
 //socket.io functionality
 
 const ENDPOINT = "http://localhost:5000";
@@ -19,7 +21,7 @@ var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const toast = useToast();
-    const { user, selectedChat, setSelectedChat} = ChatState();
+    const { user, selectedChat, setSelectedChat, notification, setNotification } = ChatState();
     
     const [loading, setLoading] = useState(false);
     const [messages, setMessages]  = useState([]);
@@ -27,6 +29,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [socketConnected, setSocketConnected] = useState(false); 
     const [typing, setTyping] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
+
+    const defaultOptions = {
+        loop : true,
+        autoplay: true,
+        animationData: animationData,
+        renderSettings: {
+            preserveAspectRatio: "xMidYMid slice",
+        },
+    };
 
     const fetchMessages = async () =>{
         if(!selectedChat) return;
@@ -42,7 +53,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             setLoading(true);
             const { data } = await axios.get(`/api/message/${selectedChat._id}`, config);
 
-            console.log("data from fetch message(Single chat)", data);
+            //not working
+            // console.log("data from fetch message(Single chat)", data);
             setMessages(data);
             setLoading(false);
 
@@ -70,15 +82,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
     useEffect(() => {
         fetchMessages();
-        //
+        
 
         selectedChatCompare = selectedChat;
     }, [selectedChat]);
+    // console.log(notification, "----"); 
 
     useEffect(() => {
         socket.on("message received", (newMessageReceived) => {
             if(!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id){
                 // display notification
+                console.log(notification);
+                if(!notification.includes(newMessageReceived)){
+                    setNotification([newMessageReceived, ...notification]);
+                    setFetchAgain(!fetchAgain);
+                }
+
             } else{
                 setMessages([...messages, newMessageReceived]);
             }
@@ -105,9 +124,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     chatId : selectedChat._id,
                 }, config);
                 
-                console.log("data from send message(Single chat)", data);
+                //not working
+                // console.log("data from send message(Single chat)", data);
                 socket.emit("new message", data);
-                console.log("below socket.emit", data);
+                // console.log("below socket.emit", data);
                 setMessages([...messages, data]);
             } catch (error) {
                 toast({
@@ -218,7 +238,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 )}
                 <FormControl onKeyDown={sendMessage} isRequired mt={3}>
                     { isTyping ? 
-                        <div>Loading...</div> 
+                        <div>
+                            <Lottie
+                                options={defaultOptions}
+                                width={90}
+                                height={25}
+                                style={{ margingBottom: "50px", marginLeft: "5px"}}
+                            
+                            />
+                        </div> 
                         : 
                         <></>}
                     

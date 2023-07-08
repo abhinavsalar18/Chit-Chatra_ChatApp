@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const Chatpage = () => {
   const { user, setUser } = ChatState();
-  const {fetchAgain, setFetchAgain} = useState(false);
+  const [ fetchAgain, setFetchAgain ] = useState(false);
   return (
     <div style={{ width: "100%" }}>
       {user && <SideDrawer />}

@@ -48,7 +48,7 @@ const Login = () => {
       return;
     }
 
-    // console.log(email, password);
+    console.log(email, password);
     try {
       const config = {
         headers: {
@@ -59,13 +59,14 @@ const Login = () => {
     //   const api = await axios.create({
     //     baseURL: 'http://localhost:5000',
     //   }); 
-      
-      const { data } = await axios.post(
-        "/api/user/login",
-        { email, password },
-        config
-      );
+      console.log("email: ", email, "passowrd: ", password);
+      // const { data } = await axios.get(
+      //  "http://localhost:3001/api/user/login"
+      //   ,
+      //   { email, password }
+      // );
 
+      const {data} = await axios.post("http://localhost:3001/api/user/login", { email, password }, config);
       console.log(JSON.stringify(data));
       console.log("login successful");
       toast({
@@ -81,7 +82,7 @@ const Login = () => {
     } catch (error) {
       toast({
         title: "Invalid Credentials",
-        description: error.response.data.message,
+        description: "",
         status: "error",
         duration: 5000,
         isClosable: true,

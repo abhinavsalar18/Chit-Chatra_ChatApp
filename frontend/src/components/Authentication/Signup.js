@@ -119,7 +119,7 @@ const Signup = () => {
             };
 
             const { data } = await axios.post(
-                "/api/user",
+                "http://localhost:3001/api/user",
                 {name, email, password, pic}, 
                 config);
                 toast({

@@ -74,7 +74,7 @@ const SideDrawer = () => {
         },
       };
 
-      const { data } = await axios.get(`/api/user?search=${search}`, config);
+      const { data } = await axios.get(`http://localhost:3001/api/user?search=${search}`, config);
       // console.log("data: ", data);
       setLoading(false);
       setSearchResult(data);
@@ -102,7 +102,7 @@ const SideDrawer = () => {
         },
       };
 
-      const { data } = await axios.post("/api/chats", { userId }, config);
+      const { data } = await axios.post("http://localhost:3001/api/chats", { userId }, config);
 
       if (!chats.find((c) => c._id === data._id)) {
         setChats([data, ...chats]);

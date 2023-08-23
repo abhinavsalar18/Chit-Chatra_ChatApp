@@ -34,7 +34,7 @@ import {Box} from "@chakra-ui/layout"
                 },
             };
 
-            const { data } = await axios.get(`/api/user?search=${query}`, config);
+            const { data } = await axios.get(`http://localhost:3001/api/user?search=${query}`, config);
             console.log("query data GroupChatModal", data);
             setLoading(false);
             setSearchResult(data);
@@ -69,7 +69,7 @@ import {Box} from "@chakra-ui/layout"
           },
         };
         const { data } = await axios.post(
-          `/api/chats/group`,
+          `http://localhost:3001/api/chats/group`,
           {
             name: groupChatName,
             users: JSON.stringify(selectedUsers.map((u) => u._id)),

@@ -16,6 +16,7 @@ const app = express();
 
 app.use(
     cors({
+        origin : "http://localhost:3001",
         origin : "http://localhost:3000",
     })
 );
@@ -36,19 +37,21 @@ app.use(errorHandler);
 
 
 
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, console.log(`Server is running on port 5000...`.green.bold));
+const PORT = process.env.PORT || 3001;
+const server = app.listen(3001, console.log(`Server is running on port ${PORT}...`.green.bold));
 
 const io = require('socket.io')(server, {
     pingTimeout: 60000,
     cors: {
+        // on getting CORS error try to add the origin for which error is generating
+        origin: "http://localhost:3001",
         origin: "http://localhost:3000",
     },
 });
 
 // for setup
 io.on("connection", (socket) => {
-    console.log("connected to socket.io"); ty
+    console.log("connected to socket.io"); 
 
     socket.on('setup', (userData) => {
         socket.join(userData._id);

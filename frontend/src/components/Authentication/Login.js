@@ -6,8 +6,10 @@ import { useState } from "react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
 
 const Login = () => {
+  
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const toast = useToast();
@@ -65,7 +67,8 @@ const Login = () => {
       //   ,
       //   { email, password }
       // );
-
+        
+    
       const {data} = await axios.post("http://localhost:3001/api/user/login", { email, password }, config);
       console.log(JSON.stringify(data));
       console.log("login successful");
@@ -92,6 +95,9 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+
+  }, [history])
   return (
     <VStack spacing="10px">
       <FormControl id="email" isRequired>

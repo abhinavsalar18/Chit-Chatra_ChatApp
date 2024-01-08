@@ -50,22 +50,29 @@ const io = require('socket.io')(server, {
 });
 
 // for setup
+const onlineUsers = {};
 io.on("connection", (socket) => {
     console.log("connected to socket.io"); 
 
     socket.on('setup', (userData) => {
-        socket.join(userData._id);
-        console.log("User data:", userData._id);
+        onlineUsers[userData._id] = socket.id; // Add user to onlineUsers
+        io.emit('updateUsers', Object.keys(onlineUsers)); // Emit updated online users list
+        console.log("updatedUsers: ", onlineUsers);
         socket.emit('connected');
     });
 
-// for joining the room
     socket.on("join chat", (room) => {
         socket.join(room);
         console.log("User joined room: " + room);
     });
 
-
+    socket.on('disconnect', () => {
+        const userId = Object.keys(onlineUsers).find(key => onlineUsers[key] === socket.id);
+        if (userId) {
+            delete onlineUsers[userId]; // Remove user from onlineUsers
+            io.emit('updateUsers', Object.keys(onlineUsers)); // Emit updated online users list
+        }
+    });
 //for sending message
 
     socket.on("new message", (newMessageReceived) => {

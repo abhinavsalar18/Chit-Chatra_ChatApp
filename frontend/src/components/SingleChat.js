@@ -22,14 +22,14 @@ var socket, selectedChatCompare;
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const toast = useToast();
     const { user, selectedChat, setSelectedChat, notification, setNotification } = ChatState();
-    
+    const [onlineUsers, setOnlineUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [messages, setMessages]  = useState([]);
     const [newMessage, setNewMessage] = useState();
     const [socketConnected, setSocketConnected] = useState(false); 
     const [typing, setTyping] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
-
+    const [isUserOnline, setIsUserOnline] = useState(false);
     const defaultOptions = {
         loop : true,
         autoplay: true,
@@ -38,10 +38,33 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             preserveAspectRatio: "xMidYMid slice",
         },
     };
+    
+    const handleUserClick = () => {
+        setIsUserOnline(false);
+        // Check if the user is online
+        let userId;
+        for(let idx = 0; idx < selectedChat?.users.length; idx++){
+            if(user._id !== selectedChat?.users[idx]?._id){
+                userId = selectedChat?.users[idx]?._id;
+                break;
+            }
+        }
+        const isOnline = onlineUsers.includes(userId);
+        if(isOnline){
+            setIsUserOnline(true);
+        }
+        
+        console.log(selectedChat);
+        console.log(onlineUsers);
+        console.log(`User ${userId} is ${isOnline ? 'Online' : 'Offline'}`);
+        
+        // Further logic when a chat is clicked
+        // ...
+    };
 
     const fetchMessages = async () =>{
         if(!selectedChat) return;
-
+        handleUserClick();
         try {
             
             const config = {
@@ -77,6 +100,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
         socket.on("typing", () => setIsTyping(true));
         socket.on("stop typing", () => setIsTyping(false));
+
+        socket.on('updateUsers', (updatedUsers) => {
+            setOnlineUsers(updatedUsers);
+        });
+    
           
     }, []);
 
@@ -196,6 +224,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                             <ProfileModal
                                 user={getSenderFull(user, selectedChat.users)}
                             />
+                            {
+                                isUserOnline &&
+                                <Text
+                                    fontSize={{base: "24px", md: "20px"}}
+                                    pb={2}
+                                    px={2}
+                                >Online</Text>
+                            }
                             </>
                         ) : (
                             <>

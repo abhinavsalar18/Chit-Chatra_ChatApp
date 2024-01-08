@@ -45,16 +45,16 @@ const Signup = () => {
 
         // const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
         // I have made a mistake earlier, I have not copied the full path for image upload
-        // I have juts copied the "https://api.cloudinary.com/v1_1/dosgdhlal"
+        // I have just copied the "https://api.cloudinary.com/v1_1/dosgdhlal"
         // And as fetch was not able to find the correct end points therefore it was throwing the 
         // CORS error -> read about it   
-        const apiUrl = 'https://api.cloudinary.com/v1_1/dosgdhlal/image/upload';
+        const apiUrl = 'https://api.cloudinary.com/v1_1/quantumbackend/image/upload/';
         
         if (pics.type === 'image/jpeg' || pics.type === 'image/png') {
           const data = new FormData();
           data.append('file', pics);
-          data.append('upload_preset', "chat-app");
-          data.append('cloud_name', "dosgdhlal");
+          data.append('upload_preset', "ChatApp");
+          data.append('cloud_name', "quantumbackend");
         
           fetch(apiUrl, {
             method: 'POST',

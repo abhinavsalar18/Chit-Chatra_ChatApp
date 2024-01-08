@@ -48,13 +48,13 @@ const Signup = () => {
         // I have just copied the "https://api.cloudinary.com/v1_1/dosgdhlal"
         // And as fetch was not able to find the correct end points therefore it was throwing the 
         // CORS error -> read about it   
-        const apiUrl = 'https://api.cloudinary.com/v1_1/quantumbackend/image/upload/';
+        const apiUrl = process.env.REACT_APP_CLOUDINARY_URL;
         
         if (pics.type === 'image/jpeg' || pics.type === 'image/png') {
           const data = new FormData();
           data.append('file', pics);
-          data.append('upload_preset', "ChatApp");
-          data.append('cloud_name', "quantumbackend");
+          data.append('upload_preset', process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
+          data.append('cloud_name', process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
         
           fetch(apiUrl, {
             method: 'POST',
